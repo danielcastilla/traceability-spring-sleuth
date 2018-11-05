@@ -7,11 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 public class Microservices1Application {
@@ -44,9 +47,28 @@ class Microservices1Controller{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		 String response = (String) restTemplate.exchange("http://localhost:8082/ms2", HttpMethod.GET, null, new ParameterizedTypeReference<String>() {
 	        }).getBody();
 		return " Ha pasado por los microservicios: 1 "+ response;
 	}
+
+	@PostMapping(path = "/ms1/{decimal}")
+	public Map getNumbers(@PathVariable String decimal){
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("decimal", decimal);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
+
+		return response.getBody();
+	}
+
+
+
 
 }
