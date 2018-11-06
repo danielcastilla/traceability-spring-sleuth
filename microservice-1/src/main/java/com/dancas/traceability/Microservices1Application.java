@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,7 +28,10 @@ public class Microservices1Application {
 
 @RestController
 class Microservices1Controller{
-	
+
+	@Autowired
+	Tracer tracer;
+
 	@Autowired
 	RestTemplate restTemplate;
 	@Bean
@@ -56,6 +61,7 @@ class Microservices1Controller{
 	@PostMapping(path = "/ms1/{decimal}")
 	public Map getNumbers(@PathVariable String decimal){
 
+		createSpam(decimal);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -69,6 +75,18 @@ class Microservices1Controller{
 	}
 
 
+	private void createSpam(String decimal){
+		Span newSpan = this.tracer.createSpan("convert-number()");
+
+		try {
+			this.tracer.addTag("number", decimal);
+
+			newSpan.logEvent("convert-number");
+		}finally {
+			this.tracer.close(newSpan);
+		}
+
+	}
 
 
 }

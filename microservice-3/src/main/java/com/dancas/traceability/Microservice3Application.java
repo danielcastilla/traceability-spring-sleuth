@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,7 +28,9 @@ public class Microservice3Application {
 }
 @RestController
 class Microservice3Controller{
-	
+
+    @Autowired
+    Tracer tracer;
 	@Autowired
 	RestTemplate restTemplate;
 	@Bean
@@ -71,7 +75,20 @@ class Microservice3Controller{
 
 	//Convert to octal
 	private String convert(int n) {
-		return Integer.toOctalString(n);
+
+        Span newSpan = this.tracer.createSpan("convert-number()");
+        String octal = "";
+
+        try {
+            this.tracer.addTag("number", String.valueOf(n));
+
+            newSpan.logEvent("convert-number");
+            octal = Integer.toOctalString(n);
+        }finally {
+            this.tracer.close(newSpan);
+        }
+
+        return octal;
 	}
 
 }

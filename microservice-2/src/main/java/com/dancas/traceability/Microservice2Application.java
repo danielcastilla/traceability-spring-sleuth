@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,7 +31,9 @@ public class Microservice2Application {
 }
 @RestController
 class Microservice2Controller{
-	
+
+	@Autowired
+	Tracer tracer;
 	@Autowired
 	RestTemplate restTemplate;
 	@Bean
@@ -73,7 +77,20 @@ class Microservice2Controller{
 
 	//Convert to binario
 	private String convert(int n) {
-		return Integer.toBinaryString(n);
+
+		Span newSpan = this.tracer.createSpan("convert-number()");
+		String binary = "";
+
+		try {
+			this.tracer.addTag("number", String.valueOf(n));
+
+			newSpan.logEvent("convert-number");
+			binary = Integer.toBinaryString(n);
+		}finally {
+			this.tracer.close(newSpan);
+		}
+
+		return binary;
 	}
 
 }

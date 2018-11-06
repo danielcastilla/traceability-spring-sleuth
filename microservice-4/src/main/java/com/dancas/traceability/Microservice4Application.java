@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
@@ -29,6 +31,9 @@ public class Microservice4Application {
 
 @RestController
 class Microservice4Controller {
+
+    @Autowired
+    Tracer tracer;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -71,7 +76,21 @@ class Microservice4Controller {
 
 	//Convert to hexadecimal
 	private String convert(int n) {
-		return Integer.toHexString(n);
+
+        Span newSpan = this.tracer.createSpan("convert-number()");
+        String hex = "";
+
+        try {
+            this.tracer.addTag("number", String.valueOf(n));
+
+            newSpan.logEvent("convert-number");
+            hex = Integer.toHexString(n);
+        }finally {
+            this.tracer.close(newSpan);
+        }
+
+        return hex;
+
 	}
 
 
