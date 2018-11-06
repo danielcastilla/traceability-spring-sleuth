@@ -58,15 +58,15 @@ class Microservice3Controller{
 
 
     @PostMapping(path = "/ms3")
-    public Map getNumbers(@RequestBody MultiValueMap<String, String> map){
+    public Map getNumbers(@RequestBody Map<String, String> map){
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String decimal = String.valueOf(map.get("decimal").get(0));
-        map.add("octal", convert(Integer.parseInt(decimal)));
+        String decimal = String.valueOf(map.get("decimal"));
+        map.put("octal", convert(Integer.parseInt(decimal)));
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+        HttpEntity<Map<String, String>> request = new HttpEntity<Map<String, String>>(map, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8084/ms4", request, Map.class);
 
         return response.getBody();

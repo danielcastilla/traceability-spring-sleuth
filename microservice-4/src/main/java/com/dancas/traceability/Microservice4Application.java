@@ -63,13 +63,13 @@ class Microservice4Controller {
 	}
 
     @PostMapping(path = "/ms4")
-    public Map getNumbers(@RequestBody MultiValueMap<String, String> map){
+    public Map getNumbers(@RequestBody Map<String, String> map){
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String decimal = String.valueOf(map.get("decimal").get(0));
-        map.add("hexadecimal", convert(Integer.parseInt(decimal)));
+        String decimal = String.valueOf(map.get("decimal"));
+        map.put("hexadecimal", convert(Integer.parseInt(decimal)));
 
         return map;
     }

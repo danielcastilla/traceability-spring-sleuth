@@ -60,16 +60,16 @@ class Microservice2Controller{
 	}
 
 	@PostMapping(path = "/ms2")
-	public Map getNumbers(@RequestBody MultiValueMap<String, String> map){
+	public Map getNumbers(@RequestBody Map<String, String> map){
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		String decimal = String.valueOf(map.get("decimal").get(0));
+		String decimal = String.valueOf(map.get("decimal"));
 		int decim = Integer.parseInt(decimal);
-		map.add("binario", convert(decim));
+		map.put("binario", convert(decim));
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<Map<String, String>> request = new HttpEntity<Map<String, String>>(map, headers);
 		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8083/ms3", request, Map.class);
 
 		return response.getBody();
