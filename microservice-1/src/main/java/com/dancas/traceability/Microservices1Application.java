@@ -34,6 +34,10 @@ class Microservices1Controller{
 	Tracer tracer;
 
 	@Autowired
+	com.dancas.trace.library.Tracing customTracer;
+
+
+	@Autowired
 	RestTemplate restTemplate;
 	@Bean
 	public RestTemplate getRestTemplate() {
@@ -62,7 +66,7 @@ class Microservices1Controller{
 	@PostMapping(path = "/ms1/{decimal}")
 	public Map getNumbers(@PathVariable String decimal){
 
-		createSpam(decimal);
+        logwithCustomTracer();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -71,25 +75,22 @@ class Microservices1Controller{
 
 		HttpEntity<Map<String, String>> request = new HttpEntity<Map<String, String>>(map, headers);
 
-		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
+//		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+//		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
+//		return response.getBody();
 
-		return response.getBody();
-	}
+        Map result = new HashMap<String, String>(1);
+        result.put("ok", "ok");
 
-
-	private void createSpam(String decimal){
-		Span newSpan = this.tracer.createSpan("convert-number()");
-
-		try {
-			this.tracer.addTag("number", decimal);
-
-			newSpan.logEvent("convert-number");
-		}finally {
-			this.tracer.close(newSpan);
-		}
+        return result;
 
 	}
 
-
+	private void logwithCustomTracer() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        customTracer.createTrace(tracer, methodName, this.getClass().getSimpleName());
+    }
 }
