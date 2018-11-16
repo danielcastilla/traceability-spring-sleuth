@@ -33,7 +33,7 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
-<dependencyManagement>
+    <dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>

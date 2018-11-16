@@ -75,14 +75,14 @@ class Microservices1Controller{
 
 		HttpEntity<Map<String, String>> request = new HttpEntity<Map<String, String>>(map, headers);
 
-//		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-//		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
-//		return response.getBody();
+		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
+		return response.getBody();
 
-        Map result = new HashMap<String, String>(1);
-        result.put("ok", "ok");
+//        Map result = new HashMap<String, String>(1);
+//        result.put("ok", "ok");
 
-        return result;
+//        return result;
 
 	}
 
