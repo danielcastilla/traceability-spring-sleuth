@@ -11,6 +11,11 @@
 	<name>microservice-1</name>
 	<description>Demo project for Spring Boot</description>
 
+    <properties>
+        <prometheus.version>1.0.6</prometheus.version>
+    </properties>
+
+
 	  <parent>
 		<groupId>com.dancas.traceability</groupId>
 		 <artifactId>traceability</artifactId>
@@ -50,6 +55,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Micormeter core dependecy  -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>${prometheus.version}</version>
+        </dependency>
+        <!-- Micrometer Prometheus registry  -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${prometheus.version}</version>
         </dependency>
 	</dependencies>
 

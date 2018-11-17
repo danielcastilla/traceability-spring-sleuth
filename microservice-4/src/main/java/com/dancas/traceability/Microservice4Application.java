@@ -1,12 +1,12 @@
 package com.dancas.traceability;
 
+import brave.Span;
+import brave.Tracer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.sleuth.Span;
-import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,11 +37,6 @@ class Microservice4Controller {
 
 	@Autowired
 	RestTemplate restTemplate;
-
-	@Bean
-	public AlwaysSampler alwaysSampler() {
-		return new AlwaysSampler();
-	}
 
 	private static final Logger LOG = Logger.getLogger(Microservice4Controller.class.getName());
 
@@ -77,16 +72,16 @@ class Microservice4Controller {
 	//Convert to hexadecimal
 	private String convert(int n) {
 
-        Span newSpan = this.tracer.createSpan("convert-number()");
+        Span newSpan = this.tracer.nextSpan().name("convert-number()");
         String hex = "";
 
         try {
-            this.tracer.addTag("number", String.valueOf(n));
+            newSpan.tag("number", String.valueOf(n));
 
-            newSpan.logEvent("convert-number");
+            newSpan.annotate("convert-number");
             hex = Integer.toHexString(n);
         }finally {
-            this.tracer.close(newSpan);
+            newSpan.finish();
         }
 
         return hex;

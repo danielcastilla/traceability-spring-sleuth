@@ -1,12 +1,12 @@
 package com.dancas.traceability;
 
+import brave.Span;
+import brave.Tracer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.sleuth.Span;
-import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -32,16 +32,19 @@ public class Microservice2Application {
 @RestController
 class Microservice2Controller{
 
+
+
 	@Autowired
 	Tracer tracer;
+
+    @Autowired
+    com.dancas.trace.library.Tracing customTracer;
+
 	@Autowired
 	RestTemplate restTemplate;
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
-	}@Bean
-	public AlwaysSampler alwaysSampler() {
-		return new AlwaysSampler();
 	}
 	private static final Logger LOG = Logger.getLogger(Microservice2Controller.class.getName());
 	
@@ -78,19 +81,28 @@ class Microservice2Controller{
 	//Convert to binario
 	private String convert(int n) {
 
-		Span newSpan = this.tracer.createSpan("convert-number()");
+		Span newSpan = this.tracer.nextSpan().name("convert-number()");
 		String binary = "";
 
 		try {
-			this.tracer.addTag("number", String.valueOf(n));
+			newSpan.tag("number", String.valueOf(n));
 
-			newSpan.logEvent("convert-number");
+			newSpan.annotate("convert-number");
 			binary = Integer.toBinaryString(n);
 		}finally {
-			this.tracer.close(newSpan);
+            newSpan.finish();
 		}
 
 		return binary;
 	}
+
+
+    private void logwithCustomTracer() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        customTracer.createTrace(tracer, methodName, this.getClass().getSimpleName());
+    }
 
 }

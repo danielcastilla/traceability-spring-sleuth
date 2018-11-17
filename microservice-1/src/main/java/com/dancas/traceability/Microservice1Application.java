@@ -1,12 +1,10 @@
 package com.dancas.traceability;
 
+import brave.Tracer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.sleuth.Span;
-import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -20,18 +18,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
-public class Microservices1Application {
+public class Microservice1Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Microservices1Application.class, args);
+		SpringApplication.run(Microservice1Application.class, args);
 	}
 }
 
 @RestController
-class Microservices1Controller{
+class Microservice1Controller{
 
 	@Autowired
-	Tracer tracer;
+    Tracer tracer;
 
 	@Autowired
 	com.dancas.trace.library.Tracing customTracer;
@@ -42,11 +40,8 @@ class Microservices1Controller{
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
-	}@Bean
-	public AlwaysSampler alwaysSampler() {
-		return new AlwaysSampler();
 	}
-	private static final Logger LOG = Logger.getLogger(Microservices1Controller.class.getName());
+	private static final Logger LOG = Logger.getLogger(Microservice1Controller.class.getName());
 	
 	@GetMapping(value="/ms1")
 	public String microservice1() {
@@ -77,6 +72,7 @@ class Microservices1Controller{
 
 		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
+        logwithCustomTracer();
 		return response.getBody();
 
 //        Map result = new HashMap<String, String>(1);
