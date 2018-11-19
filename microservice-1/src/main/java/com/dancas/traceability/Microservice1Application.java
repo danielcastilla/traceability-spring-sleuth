@@ -1,7 +1,8 @@
 package com.dancas.traceability;
 
 import brave.Tracer;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,20 +33,17 @@ class Microservice1Controller{
     Tracer tracer;
 
 	@Autowired
-	com.dancas.trace.library.Tracing customTracer;
-
-
-	@Autowired
 	RestTemplate restTemplate;
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
 	}
-	private static final Logger LOG = Logger.getLogger(Microservice1Controller.class.getName());
-	
+
+	private static Logger log = LoggerFactory.getLogger(Microservice1Controller.class);
+
 	@GetMapping(value="/ms1")
 	public String microservice1() {
-		LOG.info("Inside microservices 1..");
+
 		try {
 			Thread.sleep(1 * 1000);
 		} catch (InterruptedException e) {
@@ -60,9 +58,10 @@ class Microservice1Controller{
 
 	@PostMapping(path = "/ms1/{decimal}")
 	public Map getNumbers(@PathVariable String decimal){
+        log.info("Handling microservice 1 Controller");
 
-        logwithCustomTracer();
-		HttpHeaders headers = new HttpHeaders();
+
+        HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		Map<String, String> map = new HashMap<String, String>();
@@ -72,21 +71,12 @@ class Microservice1Controller{
 
 		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
-        logwithCustomTracer();
 		return response.getBody();
 
-//        Map result = new HashMap<String, String>(1);
-//        result.put("ok", "ok");
-
-//        return result;
+        //Map result = new HashMap<String, String>(1);
+        //result.put("ok", "ok");
+        //return result;
 
 	}
 
-	private void logwithCustomTracer() {
-        String methodName = new Object() {}
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        customTracer.createTrace(tracer, methodName, this.getClass().getSimpleName());
-    }
 }

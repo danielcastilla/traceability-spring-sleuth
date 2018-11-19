@@ -32,13 +32,8 @@ public class Microservice2Application {
 @RestController
 class Microservice2Controller{
 
-
-
 	@Autowired
 	Tracer tracer;
-
-    @Autowired
-    com.dancas.trace.library.Tracing customTracer;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -95,14 +90,5 @@ class Microservice2Controller{
 
 		return binary;
 	}
-
-
-    private void logwithCustomTracer() {
-        String methodName = new Object() {}
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        customTracer.createTrace(tracer, methodName, this.getClass().getSimpleName());
-    }
 
 }
