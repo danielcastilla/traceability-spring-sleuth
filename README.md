@@ -1,8 +1,13 @@
 ### Traceability with Spring Sleuth
 
+Proof of concept to test the integration between Spring, Zipkin and Jaeger with microservices.
+
 ![traceability](img/traceability-microservices-arch.png)
 
-
+- Spring Boot 2.0.1
+- Spring Cloud Finchley.SR2
+- Zipkin 
+- Jaeger 1.7
 
 #### DOCKER
 

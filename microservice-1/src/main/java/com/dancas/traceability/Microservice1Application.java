@@ -73,10 +73,6 @@ class Microservice1Controller{
 		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
 		return response.getBody();
 
-        //Map result = new HashMap<String, String>(1);
-        //result.put("ok", "ok");
-        //return result;
-
 	}
 
 }
