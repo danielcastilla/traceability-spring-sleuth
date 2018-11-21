@@ -30,3 +30,10 @@ URL: [http://localhost:9411/zipkin](http://localhost:9411/zipkin)
 ### Spring Cloud Sleuth
 
 https://cloud.spring.io/spring-cloud-sleuth/1.2.x/multi/multi_spring-cloud-sleuth.html
+
+
+#### Swagger Console
+
+http://localhost:[port]/swagger-ui.html
+
+
