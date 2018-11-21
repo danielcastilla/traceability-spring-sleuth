@@ -27,6 +27,12 @@ URL: [http://localhost:9411/zipkin](http://localhost:9411/zipkin)
 
 ![zipkin](img/zipkin-screenshot.png)
 
+
+Install Prometheus image
+
+``` docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus ```
+
+
 ### Spring Cloud Sleuth
 
 https://cloud.spring.io/spring-cloud-sleuth/1.2.x/multi/multi_spring-cloud-sleuth.html
@@ -35,5 +41,6 @@ https://cloud.spring.io/spring-cloud-sleuth/1.2.x/multi/multi_spring-cloud-sleut
 #### Swagger Console
 
 http://localhost:[port]/swagger-ui.html
+
 
 
