@@ -1,6 +1,14 @@
 ### Traceability with Spring Sleuth
 
-Proof of concept to test the integration between Spring, Zipkin and Jaeger with microservices.
+Prueba de concepto para mostrar el comportamiento en un modelo de microservicios con los siguientes aspectos:
+
+- Trazabilidad con Spring Sleuth, Zipkin y Jaeger
+- Monitorización con Prometheus y Grafana
+
+El modelo de microservicios utilizado en la prueba es muy simple. El ms1 recibirá un número decimal. Se lo enviará al ms2. Este a su vez al ms3 y este finalizará enviándole el decimal al ms4. Cada uno de ellos devolvera el decimal transformándolo a binario(ms2), octal(ms3) y hexadecimal(ms4).
+
+El proposito de la prueba no es tener una funcionalidad compleja sino generar mensajes suficientes entre los microservicios para estudiar el comportamiento de estos en las herramientas de monitorización y trazabilidad.
+ 
 
 ![traceability](img/traceability-microservices-arch.png)
 
@@ -41,8 +49,5 @@ https://cloud.spring.io/spring-cloud-sleuth/1.2.x/multi/multi_spring-cloud-sleut
 #### Swagger Console
 
 http://localhost:[port]/swagger-ui.html
-
-
-### TEST
 
 
