@@ -1,21 +1,15 @@
 package com.dancas.traceability;
 
 import brave.Tracer;
+import com.dancas.traceability.service.RestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
@@ -30,14 +24,10 @@ public class Microservice1Application {
 class Microservice1Controller{
 
 	@Autowired
-    Tracer tracer;
+    RestService microservice1Service;
 
 	@Autowired
-	RestTemplate restTemplate;
-	@Bean
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	}
+    Tracer tracer;
 
 	private static Logger log = LoggerFactory.getLogger(Microservice1Controller.class);
 
@@ -51,28 +41,15 @@ class Microservice1Controller{
 			e.printStackTrace();
 		}
 
-		 String response = (String) restTemplate.exchange("http://localhost:8082/ms2", HttpMethod.GET, null, new ParameterizedTypeReference<String>() {
-	        }).getBody();
+		String response = microservice1Service.doGet();
 		return " Ha pasado por los microservicios: 1 "+ response;
 	}
 
 	@PostMapping(path = "/ms1/{decimal}")
 	public Map getNumbers(@PathVariable String decimal){
         log.info("Handling microservice 1 Controller");
-
-
-        HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("decimal", decimal);
-
-		HttpEntity<Map<String, String>> request = new HttpEntity<Map<String, String>>(map, headers);
-
-		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-		ResponseEntity<Map> response = restTemplate.postForEntity("http://localhost:8082/ms2/", request, Map.class);
+		ResponseEntity<Map> response = microservice1Service.getNumber(decimal);
 		return response.getBody();
-
 	}
 
 }
