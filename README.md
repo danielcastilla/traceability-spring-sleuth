@@ -1,4 +1,4 @@
-### Traceability with Spring Sleuth
+### Trazabilidad con Spring Sleuth
 
 Prueba de concepto para mostrar el comportamiento en un modelo de microservicios con los siguientes aspectos:
 
@@ -19,7 +19,10 @@ El proposito de la prueba no es tener una funcionalidad compleja sino generar me
 
 #### DOCKER
 
-Install Jaeger image
+Descargamos y arrancamos la imagen de Jaeger
+
+```docker pull jaegertracing/all-in-one```
+
 
 ```docker run -d -e COLLECTOR_ZIPKIN_HTTP_PORT=9411   -p 5775:5775/udp   -p 6831:6831/udp   -p 6832:6832/udp   -p 5778:5778   -p 16686:16686   -p 14268:14268   -p 9411:9411   jaegertracing/all-in-one:1.7```
 
@@ -27,7 +30,9 @@ URL: [http://localhost:16686](http://localhost:16686)
 
 ![jaeger](img/jaeger-screenshot.png)
 
-Install Zipkin image
+Descargamos y arrancamos la imagen de Zipkin
+
+```docker pull openzipkin/zipkin```
 
 ```docker run -d  -p 9411:9411  openzipkin/zipkin ```
 
@@ -36,7 +41,10 @@ URL: [http://localhost:9411/zipkin](http://localhost:9411/zipkin)
 ![zipkin](img/zipkin-screenshot.png)
 
 
-Install Prometheus image
+Descargamos y arrancamos la imagen de Prometheus
+
+```docker pull prom/prometheus ```
+
 
 ``` docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus ```
 
