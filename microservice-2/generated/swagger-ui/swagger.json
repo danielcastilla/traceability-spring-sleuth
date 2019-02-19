@@ -1,0 +1,60 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Microservices description for Api Publisher",
+    "version" : "v1.0",
+    "title" : "Microservicio 1",
+    "termsOfService" : "www.wso2.com",
+    "contact" : {
+      "name" : "Daniel Castilla",
+      "email" : "daniel.castilla@sngular.com"
+    }
+  },
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/ms1" : {
+      "get" : {
+        "summary" : " Valor del nombre ",
+        "description" : " Get Operation ",
+        "operationId" : "microservice1",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ms1/{decimal}" : {
+      "post" : {
+        "summary" : " Valor del nombre ",
+        "description" : " Post Operation ",
+        "operationId" : "getNumbers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

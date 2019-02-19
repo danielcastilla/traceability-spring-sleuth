@@ -2,6 +2,8 @@ package com.dancas.traceability;
 
 import brave.Span;
 import brave.Tracer;
+import io.swagger.annotations.Api;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +17,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,6 +34,7 @@ public class Microservice2Application {
 	}
 }
 @RestController
+@Api
 class Microservice2Controller{
 
 	@Autowired
@@ -42,7 +47,8 @@ class Microservice2Controller{
 		return new RestTemplate();
 	}
 	private static final Logger LOG = Logger.getLogger(Microservice2Controller.class.getName());
-	
+
+	@RequestMapping(value = "/ms2", method = RequestMethod.GET, produces = "application/json")
 	@GetMapping(value="/ms2")
 	public String microserviceService2() {
 		LOG.info("Inside microservice 2..");
@@ -58,6 +64,7 @@ class Microservice2Controller{
 	}
 
 	@PostMapping(path = "/ms2")
+    @RequestMapping(value = "/ms2/{decimal}", method = RequestMethod.POST, produces = "application/json")
 	public Map getNumbers(@RequestBody Map<String, String> map){
 
 		HttpHeaders headers = new HttpHeaders();

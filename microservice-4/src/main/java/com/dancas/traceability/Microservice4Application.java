@@ -2,6 +2,8 @@ package com.dancas.traceability;
 
 import brave.Span;
 import brave.Tracer;
+import io.swagger.annotations.Api;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +18,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,6 +34,7 @@ public class Microservice4Application {
 }
 
 @RestController
+@Api
 class Microservice4Controller {
 
     @Autowired
@@ -46,6 +51,7 @@ class Microservice4Controller {
 	}
 
 	@GetMapping(value = "/ms4")
+	@RequestMapping(value = "/ms4", method = RequestMethod.GET, produces = "application/json")
 	public String zipkinService1() {
 		LOG.info("Inside microservice 4..");
         try {
@@ -58,6 +64,7 @@ class Microservice4Controller {
 	}
 
     @PostMapping(path = "/ms4")
+    @RequestMapping(value = "/ms4/{decimal}", method = RequestMethod.POST, produces = "application/json")
     public Map getNumbers(@RequestBody Map<String, String> map){
 
         HttpHeaders headers = new HttpHeaders();

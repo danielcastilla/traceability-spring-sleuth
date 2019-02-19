@@ -96,6 +96,66 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.github.kongchen</groupId>
+				<artifactId>swagger-maven-plugin</artifactId>
+				<version>3.1.2</version>
+				<configuration>
+					<apiSources>
+						<apiSource>
+							<springmvc>true</springmvc>
+							<locations>com.dancas.traceability</locations>
+							<schemes>http,https</schemes>
+							<info>
+								<title>Microservicio 1</title>
+								<version>v1.0</version>
+								<description>Microservices description for Api Publisher</description>
+								<termsOfService>www.wso2.com</termsOfService>
+								<contact>
+									<email>daniel.castilla@sngular.com</email>
+									<name>Daniel Castilla</name>
+								</contact>
+							</info>
+							<swaggerDirectory>${basedir}/generated/swagger-ui</swaggerDirectory>
+						</apiSource>
+					</apiSources>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.dancas.publisher</groupId>
+				<artifactId>api-manager-publisher</artifactId>
+				<version>1.1-SNAPSHOT</version>
+				<configuration>
+					<user>admin</user>
+					<password>admin</password>
+					<apiPublisherUrl>http://127.0.0.1:9763/publisher</apiPublisherUrl>
+					<resourcesPackage>com.dancas.traceability</resourcesPackage>
+					<name>Servicio2</name>
+					<version>v1.1</version>
+					<provider>admin</provider>
+					<tiers>Gold</tiers>
+					<context>micro1</context>
+					<description>Microservices description for Api Publisher</description>
+					<swaggerDirectory>${basedir}/generated/swagger-ui/swagger.json</swaggerDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
