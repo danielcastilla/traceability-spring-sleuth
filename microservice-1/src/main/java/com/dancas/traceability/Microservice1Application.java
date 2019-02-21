@@ -3,6 +3,8 @@ package com.dancas.traceability;
 import brave.Tracer;
 import com.dancas.traceability.service.RestService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +57,9 @@ class Microservice1Controller{
 	@ApiOperation(consumes = "application/json", produces = "application/json", value = " Valor del nombre ", notes = " Post Operation ", httpMethod = "POST", response = Map.class)
 	@PostMapping(path = "/ms1/{decimal}")
     @RequestMapping(value = "/ms1/{decimal}", method = RequestMethod.POST, produces = "application/json")
-
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "decimal", value = "", required = true, dataType = "string", paramType = "query")
+	})
 	public Map getNumbers(@PathVariable String decimal){
         log.info("Handling microservice 1 Controller");
 		ResponseEntity<Map> response = microservice1Service.getNumber(decimal);
